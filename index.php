@@ -1,15 +1,45 @@
+<?php
+/** Outliner - Compact List Outlining
+* @link https://github.com/exportsmedia/outliner
+* @author Michael Markoski, https://exportsmedia.com
+* @copyright 2020 Michael Markoski
+* @license https://opensource.org/licenses/MIT
+* @version 0.0.1
+*/
+
+$files = get_file_names();
+$outlineItem = isset($_GET['outline']) ? (int) $_GET['outline'] : (isset($files[0]['id']) ? (int) $files[0]['id']: 0);
+$currentItem = get_item($outlineItem);
+
+// echo "
+// <pre>", print_r($currentItem,1), "</pre>";
+
+$remove = "\n";
+
+$split = explode($remove, $currentItem['content']);
+$array[] = null;
+$tab = "\t";
+
+foreach ($split as $string)
+{
+$row = explode($tab, $string);
+array_push($array,$row);
+}
+echo "
+<pre>";
+    print_r($array);
+    echo "</pre>";
+
+?>
 <!doctype html>
 
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-
     <title>Outliner</title>
-    <meta name="description" content="The HTML5 Herald">
-    <meta name="author" content="SitePoint">
-
-    <link rel="stylesheet" href="assets/css/app.css?v=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="app.css">
 
 </head>
 
@@ -23,23 +53,25 @@
                 </div>
             </section>
             <section class="left-content">
-                <h1>My Lists</h1>
+                <h1>
+                    <a href="/" title="My Outlines">
+                        My Outlines
+                        <svg id="add-new" style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M19,19V5H5V19H19M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5C3,3.89 3.9,3 5,3H19M11,7H13V11H17V13H13V17H11V13H7V11H11V7Z" />
+                        </svg>
+                    </a>
+                </h1>
                 <ul class="action-list">
-                    <li class="item">
-                        <a href="#">
-                            Inbox
-                        </a> 
-                    </li>
-                    <li class="item">
-                        <a href="#">
-                            Inbox
-                        </a>
-                    </li>
-                    <li class="item">
-                        <a href="#">
-                            Inbox
-                        </a>
-                    </li>
+                    <?php if(!empty($files)) { ?>
+                        <?php foreach($files as $file) { ?>
+                            <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
+                                <a href="/?list=<?php echo $file['id']; ?>">
+                                    <?php echo $file['title']; ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    <?php } ?>
                 </ul>
                 <ul class="category-list">
                     <li class="item">
@@ -51,103 +83,82 @@
             </section>
         </div>
         <div class="page-content">
-            <div class="header">Today Tasks</div>
-            <div class="content-categories">
-                <div class="label-wrapper">
-                    <input class="nav-item" name="nav" type="radio" id="opt-1">
-                    <label class="category" for="opt-1">All</label>
-                </div>
-                <div class="label-wrapper">
-                    <input class="nav-item" name="nav" type="radio" id="opt-2" checked>
-                    <label class="category" for="opt-2">Important</label>
-                </div>
-                <div class="label-wrapper">
-                    <input class="nav-item" name="nav" type="radio" id="opt-3">
-                    <label class="category" for="opt-3">Notes</label>
-                </div>
-                <div class="label-wrapper">
-                    <input class="nav-item" name="nav" type="radio" id="opt-4">
-                    <label class="category" for="opt-4">Links</label>
-                </div>
-            </div>
-            <div class="tasks-wrapper">
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-1" checked>
-                    <label for="item-1">
-                        <span class="label-text">Dashboard Design Implementation</span>
-                    </label>
-                    <span class="tag approved">Approved</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-2" checked>
-                    <label for="item-2">
-                        <span class="label-text">Create a userflow</span>
-                    </label>
-                    <span class="tag progress">In Progress</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-3">
-                    <label for="item-3">
-                        <span class="label-text">Application Implementation</span>
-                    </label>
-                    <span class="tag review">In Review</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-4">
-                    <label for="item-4">
-                        <span class="label-text">Create a Dashboard Design</span>
-                    </label>
-                    <span class="tag progress">In Progress</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-5">
-                    <label for="item-5">
-                        <span class="label-text">Create a Web Application Design</span>
-                    </label>
-                    <span class="tag approved">Approved</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-6">
-                    <label for="item-6">
-                        <span class="label-text">Interactive Design</span>
-                    </label>
-                    <span class="tag review">In Review</span>
-                </div>
-                <div class="header upcoming">Upcoming Tasks</div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-7">
-                    <label for="item-7">
-                        <span class="label-text">Dashboard Design Implementation</span>
-                    </label>
-                    <span class="tag waiting">Waiting</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-8">
-                    <label for="item-8">
-                        <span class="label-text">Create a userflow</span>
-                    </label>
-                    <span class="tag waiting">Waiting</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-9">
-                    <label for="item-9">
-                        <span class="label-text">Application Implementation</span>
-                    </label>
-                    <span class="tag waiting">Waiting</span>
-                </div>
-                <div class="task">
-                    <input class="task-item" name="task" type="checkbox" id="item-10">
-                    <label for="item-10">
-                        <span class="label-text">Create a Dashboard Design</span>
-                    </label>
-                    <span class="tag waiting">Waiting</span>
-                </div>
+            <div class="header"><?php echo $currentItem['title']; ?></div>
+            <div class="outline-content">
+
             </div>
         </div>
     </div>
 
 
-    <script src="assets/js/app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
+
+
+<?php
+
+function check_active_link( int $item, int $outlineItem ) {
+    if($item == $outlineItem) {
+        return "active";
+    }
+}
+
+function get_file_names() {
+    $path = 'outlines';
+    $files = scandir($path);
+    $files = array_diff(scandir($path), array('.', '..'));
+    $outlines = [];
+    if(!empty($files)) {
+        foreach($files as $file) {
+            $parts = explode("-", $file, 2);
+            $outlines[] = [
+                'id' => (int) $parts[0],
+                'title' => get_outline_title("outlines/" . $file),
+            ];
+        }
+    }
+    return $outlines;
+}
+
+function convert_name_to_nice( string $name ) {
+    return ucwords(str_replace("-", " ", substr($name, 0, -4)));
+}
+
+function get_outline_title( $path ) {
+    return fgets(fopen($path, 'r'));
+}
+
+function get_item( int $id ) {
+    $files = array_values(preg_grep('~^'.$id.'-.*\.txt$~', scandir("outlines")));
+    if(empty($files)) {
+        return;
+    }
+    $rawContents = file_get_contents("outlines/" . $files[0]);
+    return [
+        'title' => get_outline_title("outlines/" . $files[0]),
+        'content' => $rawContents,
+    ];
+}
+
+
+/**
+* Sanitizes a filename replacing whitespace with dashes
+*
+* Removes special characters that are illegal in filenames on certain
+* operating systems and special characters requiring special escaping
+* to manipulate at the command line. Replaces spaces and consecutive
+* dashes with a single dash. Trim period, dash and underscore from beginning
+* and end of filename.
+*
+* @param string $filename The filename to be sanitized
+* @return string The sanitized filename
+*/
+function sanitize_file_name( $filename ) {
+    $filename_raw = $filename;
+    $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">" , ":" , ";" , "," , "'" , "\"", " &", "$" , "#" , "*", "(" , ")" , "|" , "~" , "`" , "!" , "{" , "}" );  
+    $filename=str_replace($special_chars, '' , $filename);
+    $filename=preg_replace('/[\s-]+/', '-' , $filename); $filename=trim($filename, '.-_' ); 
+    return strtolower($filename); 
+}
