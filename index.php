@@ -11,24 +11,13 @@ $files = get_file_names();
 $outlineItem = isset($_GET['outline']) ? (int) $_GET['outline'] : (isset($files[0]['id']) ? (int) $files[0]['id']: 0);
 $currentItem = get_item($outlineItem);
 
+
+$parsed = myParse($currentItem['content'], '    ');
+
 // echo "
-// <pre>", print_r($currentItem,1), "</pre>";
-
-$remove = "\n";
-
-$split = explode($remove, $currentItem['content']);
-$array[] = null;
-$tab = "\t";
-
-foreach ($split as $string)
-{
-$row = explode($tab, $string);
-array_push($array,$row);
-}
-echo "
-<pre>";
-    print_r($array);
-    echo "</pre>";
+// <pre>";
+//     print_r($parsed);
+//     echo "</pre>";
 
 ?>
 <!doctype html>
@@ -64,13 +53,13 @@ echo "
                 </h1>
                 <ul class="action-list">
                     <?php if(!empty($files)) { ?>
-                        <?php foreach($files as $file) { ?>
-                            <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
-                                <a href="/?list=<?php echo $file['id']; ?>">
-                                    <?php echo $file['title']; ?>
-                                </a>
-                            </li>
-                        <?php } ?>
+                    <?php foreach($files as $file) { ?>
+                    <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
+                        <a href="/?list=<?php echo $file['id']; ?>">
+                            <?php echo $file['title']; ?>
+                        </a>
+                    </li>
+                    <?php } ?>
                     <?php } ?>
                 </ul>
                 <ul class="category-list">
@@ -85,7 +74,7 @@ echo "
         <div class="page-content">
             <div class="header"><?php echo $currentItem['title']; ?></div>
             <div class="outline-content">
-
+                <?php displayArrayRecursively($parsed); //getByKey($parsed, 0, []); ?>
             </div>
         </div>
     </div>
@@ -135,7 +124,7 @@ function get_item( int $id ) {
     if(empty($files)) {
         return;
     }
-    $rawContents = file_get_contents("outlines/" . $files[0]);
+    $rawContents = file("outlines/" . $files[0]);
     return [
         'title' => get_outline_title("outlines/" . $files[0]),
         'content' => $rawContents,
@@ -152,8 +141,10 @@ function get_item( int $id ) {
 * dashes with a single dash. Trim period, dash and underscore from beginning
 * and end of filename.
 *
+* @link https://developer.wordpress.org/reference/functions/sanitize_file_name/
 * @param string $filename The filename to be sanitized
 * @return string The sanitized filename
+
 */
 function sanitize_file_name( $filename ) {
     $filename_raw = $filename;
@@ -161,4 +152,107 @@ function sanitize_file_name( $filename ) {
     $filename=str_replace($special_chars, '' , $filename);
     $filename=preg_replace('/[\s-]+/', '-' , $filename); $filename=trim($filename, '.-_' ); 
     return strtolower($filename); 
+}
+
+
+// Turn formatted file in to PHP array
+// https://stackoverflow.com/a/17016078/8034588
+/**
+* Recognising level of current header and header itself by counting prefixes
+* before header
+* @param string $string
+* @param string $prefix
+* @param &int $level
+* @param &string $header
+*/
+function myGetLevelAndHeader($string, $prefix, &$level, &$header) {
+    preg_match('/^((?:' . preg_quote($prefix) . ')*)(.*)$/', $string, $match);
+    $header = $match[2];
+    $level = strlen($match[1]) / strlen($prefix);
+}
+
+/**
+* Adding to headers array to the desired dimension without recursion
+* @param &array $headers ere
+* @param integer $level
+* @param string $header
+*/
+function myAddToHeaders(array &$headers, $level, $header) {
+    $array = &$headers;
+    while ($level--) {
+        //adding new dimension
+        is_null($array) ? $array = array() : end($array);
+
+        $last_key = key($array);
+        if (!is_null($last_key) && is_array($array[$last_key])) {
+            $array = &$array[$last_key]; // going deeper
+        } else {
+            $array = &$array[]; // create new element and going deeper
+        }
+    }  
+    $array[] = $header;
+}
+
+/**
+* Simple parsing function
+* @param array $lines
+* @param string $prefix
+* @return array
+*/
+function myParse(array $lines, $prefix = ' ') {
+    $headers = array();
+    foreach ($lines as $line) {
+        myGetLevelAndHeader($line, $prefix, $level, $header);
+        myAddToHeaders($headers, $level, $header);
+    }
+    return $headers;
+}
+
+
+// Turn formatted file in to PHP array
+// https://stackoverflow.com/a/17016078/8034588
+/**
+* Recursive function to display members of array with indentation
+*
+* @param array $arr Array to process
+* @param string $indent indentation string
+*/
+function displayArrayRecursively($arr, $indent='') {
+    if ($arr) {
+        echo '<div class="node">';
+        foreach ($arr as $value) {
+            if (is_array($value)) {
+                //
+                echo '<div class="node-children">';
+                displayArrayRecursively($value, $indent);
+                echo '</div>';
+            } else {
+                // Output
+                echo '<div class="node-self">';
+                echo "$indent $value";
+                echo '</div>';
+            }
+            
+        }
+        echo '</div>';
+    }
+}
+
+
+// filter array
+function getByKey($array, $level, $valuesUsed)
+{
+    echo '<ul>';
+    foreach ($array as $key => $value) {
+        if (is_array($array[$key])) {
+            getByKey($array[$key], $level + 1, $valuesUsed);
+        } else {
+            //if (!in_array($value, $valuesUsed)) {
+                echo "<li> $value </li>";
+                //$valuesUsed[] = $value;
+            //}
+        }
+    }
+    echo '</ul>';
+    //return $valuesUsed;
 }

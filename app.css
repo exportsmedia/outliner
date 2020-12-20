@@ -57,11 +57,9 @@ button {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: 100vh;
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 0.3px 2.2px rgba(0, 0, 0, 0.011), 0 0.7px 5.3px rgba(0, 0, 0, 0.016), 0 1.3px 10px rgba(0, 0, 0, 0.02), 0 2.2px 17.9px rgba(0, 0, 0, 0.024), 0 4.2px 33.4px rgba(0, 0, 0, 0.029), 0 10px 80px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
 }
 
 .left-bar {
@@ -69,6 +67,7 @@ button {
     width: 230px;
     border-right: 1px solid #e3e7f7;
     position: relative;
+    padding-bottom: 100px;
 }
 
 .left-content {
@@ -261,6 +260,10 @@ button {
     padding: 20px 0;
 }
 
+.outline-content {
+    margin-bottom: 100px;
+}
+
 .nav-item {
     display: none;
 }
@@ -375,6 +378,12 @@ label .label-text:before {
     float: right;
     cursor: pointer;
 }
+
+
+.node {
+    margin-left: 10px;
+}
+
 
 @media screen and (max-width: 900px) {
     .left-bar {
