@@ -56,7 +56,8 @@ $parsed = myParse($currentItem['content'], '    ');
                     <?php if(!empty($files)) { ?>
                     <?php foreach($files as $file) { ?>
                     <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
-                        <a href="/?list=<?php echo $file['id']; ?>">
+                        <a href="/?outline=<?php echo $file['id']; ?>">
+                            <i class="mdi mdi-file-document-outline"></i>
                             <?php echo $file['title']; ?>
                         </a>
                     </li>
@@ -66,6 +67,7 @@ $parsed = myParse($currentItem['content'], '    ');
                 <ul class="category-list">
                     <li class="item">
                         <a href="#" id="settings">
+                            <i class="mdi mdi-cog"></i>
                             Settings
                         </a>
                     </li>

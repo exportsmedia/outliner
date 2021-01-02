@@ -13,7 +13,8 @@ $(function() {
         }
     });
 
-    $(document).on( "click", "a", function() {
+    $(document).on( "click", "a.node-link", function(e) {
+        e.preventDefault();
         if ($(this).next('.node-self').next('.node-children').length) {
             $(this).toggleClass("collapsed mdi-minus mdi-plus");
             $(this).next('.node-self').next('.node-children').slideToggle("slow");
