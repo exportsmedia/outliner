@@ -28,6 +28,7 @@ $parsed = myParse($currentItem['content'], '    ');
     <meta charset="utf-8">
     <title>Outliner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="materialdesignicons.min.css">
     <link rel="stylesheet" href="app.css">
 
 </head>
@@ -79,7 +80,7 @@ $parsed = myParse($currentItem['content'], '    ');
         </div>
     </div>
 
-
+    <script src="jquery-3.5.1.min.js"></script>
     <script src="app.js"></script>
 </body>
 
@@ -228,11 +229,11 @@ function displayArrayRecursively($arr, $indent='') {
                 echo '</div>';
             } else {
                 // Output
-                echo '<div class="node-self">';
+                echo '<a class="node-link bullet mdi mdi-checkbox-blank-circle" tabindex="-1" title="Created at 8:36:31 PM on 10/24/2018, last edited at 8:36:31 PM on 10/24/2018" href="#"></a>';
+                echo '<div class="node-self" contenteditable="true">';
                 echo "$indent $value";
                 echo '</div>';
             }
-            
         }
         echo '</div>';
     }

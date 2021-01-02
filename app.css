@@ -384,6 +384,43 @@ label .label-text:before {
     margin-left: 10px;
 }
 
+.node-self {
+    padding: 4px 10px;
+    font-size: 1.2em;
+    display: inline-block;
+    width: 99%;
+}
+
+.node-children>.node {
+    border-left: 1px solid #eee;
+    padding: 0 5px;
+}
+
+
+.bullet {
+    display: inline-block;
+    width: 1%;
+}
+
+/* .bullet:before {
+    font-family: "Material Design Icons";
+    content: "\F012F";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-size: .9em;
+    color: #444;
+}
+
+.bullet-hover:before {
+    font-family: "Material Design Icons";
+    content: "\F0374";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-size: .9em;
+    color: #444;
+} */
 
 @media screen and (max-width: 900px) {
     .left-bar {
