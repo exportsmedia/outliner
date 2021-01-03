@@ -6,23 +6,24 @@
 * @license https://opensource.org/licenses/MIT
 * @version 0.0.1
 */
+?>
+<!doctype html>
+<html lang="en">
 
+<?php
 $files = get_file_names();
 $outlineItem = isset($_GET['outline']) ? (int) $_GET['outline'] : (isset($files[0]['id']) ? (int) $files[0]['id']: 0);
 $currentItem = get_item($outlineItem);
 
-
 $parsed = myParse($currentItem['content'], '    ');
+// remove title from first line, reset keys, and move array up one level
+unset($parsed[0]);
+$parsed = array_values($parsed);
+$parsed = $parsed[0];
 
-// echo "
-// <pre>";
-//     print_r($parsed);
-//     echo "</pre>";
+//echo "<pre>", print_r($parsed,1), "</pre>";
 
 ?>
-<!doctype html>
-
-<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -77,7 +78,7 @@ $parsed = myParse($currentItem['content'], '    ');
         <div class="page-content">
             <div class="header"><?php echo $currentItem['title']; ?></div>
             <div class="outline-content">
-                <?php displayArrayRecursively($parsed); //getByKey($parsed, 0, []); ?>
+                <?php displayArrayRecursively($parsed); ?>
             </div>
         </div>
     </div>
@@ -150,7 +151,6 @@ function get_item( int $id ) {
 
 */
 function sanitize_file_name( $filename ) {
-    $filename_raw = $filename;
     $special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">" , ":" , ";" , "," , "'" , "\"", " &", "$" , "#" , "*", "(" , ")" , "|" , "~" , "`" , "!" , "{" , "}" );  
     $filename=str_replace($special_chars, '' , $filename);
     $filename=preg_replace('/[\s-]+/', '-' , $filename); $filename=trim($filename, '.-_' ); 
@@ -220,42 +220,26 @@ function myParse(array $lines, $prefix = ' ') {
 * @param array $arr Array to process
 * @param string $indent indentation string
 */
-function displayArrayRecursively($arr, $indent='') {
+function displayArrayRecursively($arr) {
     if ($arr) {
         echo '<div class="node">';
         foreach ($arr as $value) {
             if (is_array($value)) {
                 //
                 echo '<div class="node-children">';
-                displayArrayRecursively($value, $indent);
+                displayArrayRecursively($value);
                 echo '</div>';
             } else {
                 // Output
+
+                echo '<div class="node-self">';
                 echo '<a class="node-link bullet mdi mdi-checkbox-blank-circle" tabindex="-1" title="Created at 8:36:31 PM on 10/24/2018, last edited at 8:36:31 PM on 10/24/2018" href="#"></a>';
-                echo '<div class="node-self" contenteditable="true">';
-                echo "$indent $value";
+                echo '<div class="node-line" contenteditable="true">';
+                echo "$value";
+                echo '</div>';
                 echo '</div>';
             }
         }
         echo '</div>';
     }
-}
-
-
-// filter array
-function getByKey($array, $level, $valuesUsed)
-{
-    echo '<ul>';
-    foreach ($array as $key => $value) {
-        if (is_array($array[$key])) {
-            getByKey($array[$key], $level + 1, $valuesUsed);
-        } else {
-            //if (!in_array($value, $valuesUsed)) {
-                echo "<li> $value </li>";
-                //$valuesUsed[] = $value;
-            //}
-        }
-    }
-    echo '</ul>';
-    //return $valuesUsed;
 }

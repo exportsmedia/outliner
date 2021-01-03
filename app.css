@@ -250,6 +250,8 @@ button {
     flex-direction: column;
     flex: 1;
     padding: 15px 20px 0 20px;
+    max-width: 960px;
+    margin: 0 auto;
 }
 
 .page-content .header {
@@ -393,8 +395,7 @@ label .label-text:before {
 .node-self {
     padding: 4px 10px;
     font-size: 1.2em;
-    display: inline-block;
-    width: 99%;
+    display: flex;
     white-space: pre-wrap;
     /* css-3 */
     white-space: -moz-pre-wrap;
@@ -413,12 +414,16 @@ label .label-text:before {
     margin: 5px;
 }
 
-
-.bullet {
-    display: inline-block;
-    width: 1%;
+.node-link {
     color: #7a7a7a;
     text-decoration: none;
+    font-size: .7em;
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.node-line {
+    flex-grow: 2;
 }
 
 /* .bullet:before {
