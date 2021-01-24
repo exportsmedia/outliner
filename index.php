@@ -222,17 +222,16 @@ function myParse(array $lines, $prefix = ' ') {
 */
 function displayArrayRecursively($arr) {
     if ($arr) {
-        echo '<div class="node">';
         foreach ($arr as $value) {
             if (is_array($value)) {
                 //
-                echo '<div class="node-children">';
+                echo '<div class="node node-children">';
                 displayArrayRecursively($value);
                 echo '</div>';
             } else {
                 // Output
 
-                echo '<div class="node-self">';
+                echo '<div class="node node-self">';
                 echo '<a class="node-link bullet mdi mdi-checkbox-blank-circle" tabindex="-1" title="Created at 8:36:31 PM on 10/24/2018, last edited at 8:36:31 PM on 10/24/2018" href="#"></a>';
                 echo '<div class="node-line" contenteditable="true">';
                 echo "$value";
@@ -240,6 +239,5 @@ function displayArrayRecursively($arr) {
                 echo '</div>';
             }
         }
-        echo '</div>';
     }
 }

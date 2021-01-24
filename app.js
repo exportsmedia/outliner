@@ -26,11 +26,31 @@ $(function() {
         if (keycode == '13') { //Enter key's keycode
             event.preventDefault();
             var closestNode = jQuery(this).closest(".node-self");
-            var markup = '<div class="node-self"><a class="node-link bullet mdi mdi-checkbox-blank-circle" tabindex="-1" href="#"></a><div class="node-line" contenteditable="true"></div></div>';
+            var markup = '<div class="node node-self"><a class="node-link bullet mdi mdi-checkbox-blank-circle" tabindex="-1" href="#"></a><div class="node-line" contenteditable="true"></div></div>';
             jQuery(markup).insertAfter(closestNode);
             jQuery(closestNode).next(".node-self").find(".node-line").trigger('focus');
             return false;
         }
+        if (keycode == '9' && !event.shiftKey) { //Enter key's keycode
+            event.preventDefault();
+            var closestNode = jQuery(this).closest(".node-self");
+            if (closestNode.next('.node-self').length && closestNode.parents('.node-children').length) {
+               return false;
+            } else {
+                $( closestNode ).wrap( '<div class="node node-children"></div>' );
+                jQuery(closestNode).find(".node-line").trigger('focus');
+            }
+            return false;
+        } 
+        if ((keycode == '9' && event.shiftKey)) { //Enter key's keycode
+            event.preventDefault();
+            var closestNode = jQuery(this).closest(".node-self");
+            if (closestNode.parents('.node-children').length) {
+                $(closestNode).insertAfter(closestNode.parents('.node-children').first())
+            }
+            jQuery(closestNode).find(".node-line").trigger('focus');
+            return false;
+        } 
     });
     $(document).on( "keyup", ".node-line", function(event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -43,6 +63,9 @@ $(function() {
                 }
                 if(selected.length == 0) {
                     selected = jQuery(this).closest(".node-self").prev().find(".node-line").last();
+                }
+                if(selected.length == 0) {
+                    selected = jQuery(this).closest(".node-children").prev().find(".node-line").last();
                 }
                 $(selected).trigger('focus');
                 $(selected).addClass('found-next');
