@@ -55,14 +55,14 @@ $parsed = $parsed[0];
                 </h1>
                 <ul class="action-list">
                     <?php if(!empty($files)) { ?>
-                    <?php foreach($files as $file) { ?>
-                    <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
-                        <a href="/?outline=<?php echo $file['id']; ?>">
-                            <i class="mdi mdi-file-document-outline"></i>
-                            <?php echo $file['title']; ?>
-                        </a>
-                    </li>
-                    <?php } ?>
+                        <?php foreach($files as $file) { ?>
+                        <li class="item <?php echo check_active_link( $file['id'], $outlineItem); ?>">
+                            <a href="/?outline=<?php echo $file['id']; ?>">
+                                <i class="mdi mdi-file-document-outline"></i>
+                                <?php echo $file['title']; ?>
+                            </a>
+                        </li>
+                        <?php } ?>
                     <?php } ?>
                 </ul>
                 <ul class="category-list">

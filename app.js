@@ -1,7 +1,7 @@
 $(function() {
     $(".node-link").on({
         mouseenter: function () {
-                if ($(this).next('.node-self').next('.node-children').length) {
+                if ($(this).closest('.node-self').next('.node-children').length) {
                     $(this).addClass("mdi-minus");
                     $(this).removeClass("mdi-checkbox-blank-circle");
                 }
