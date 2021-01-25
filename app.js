@@ -99,4 +99,15 @@ $(function() {
         }
     }
 
+
+    var result = $('.node-self').map(function() {
+        return $(this).find('.node-line').toArray().reduce(function(c, v) {
+            c[$(v).text()] = $(v).text();
+            return c;
+        }, {});
+        }).get();
+
+
+        console.log(result);
+
 });
