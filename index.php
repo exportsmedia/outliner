@@ -19,7 +19,12 @@ $parsed = myParse($currentItem['content'], '    ');
 // remove title from first line, reset keys, and move array up one level
 unset($parsed[0]);
 $parsed = array_values($parsed);
-$parsed = $parsed[0];
+if(!empty($parsed[0])) {
+    $parsed = $parsed[0];
+} else {
+    $parsed = ["" => ""];
+}
+
 
 //echo "<pre>", print_r($parsed,1), "</pre>";
 
