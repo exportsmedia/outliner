@@ -76,7 +76,7 @@ $parsed = $parsed[0];
             </section>
         </div>
         <div class="page-content">
-            <div class="header"><?php echo $currentItem['title']; ?></div>
+            <div class="header" contenteditable="true"><?php echo $currentItem['title']; ?></div>
             <div class="outline-content">
                 <?php displayArrayRecursively($parsed); ?>
             </div>
