@@ -31,10 +31,10 @@ $(function() {
             jQuery(closestNode).next(".node-self").find(".node-line").trigger('focus');
             return false;
         }
-        if (keycode == '9' && !event.shiftKey) { //Enter key's keycode
+        if (keycode == '9' && !event.shiftKey) { //Tab key's keycode
             event.preventDefault();
             var closestNode = jQuery(this).closest(".node-self");
-            if (closestNode.next('.node-self').length && closestNode.parents('.node-children').length) {
+            if (closestNode.prev('.node-self').length == 0 && closestNode.prev('.node-children').length == 0) {
                return false;
             } else {
                 $( closestNode ).wrap( '<div class="node node-children"></div>' );
@@ -42,7 +42,7 @@ $(function() {
             }
             return false;
         } 
-        if ((keycode == '9' && event.shiftKey)) { //Enter key's keycode
+        if ((keycode == '9' && event.shiftKey)) { //Tab + Shift key's keycode
             event.preventDefault();
             var closestNode = jQuery(this).closest(".node-self");
             if (closestNode.parents('.node-children').length) {
@@ -100,14 +100,40 @@ $(function() {
     }
 
 
-    var result = $('.node-self').map(function() {
-        return $(this).find('.node-line').toArray().reduce(function(c, v) {
-            c[$(v).text()] = $(v).text();
-            return c;
-        }, {});
-        }).get();
+    function debounce(callback, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () { callback.apply(this, args) }, wait);
+        };
+    }
 
+    window.addEventListener('keyup', debounce( () => {
 
-        console.log(result);
+        var content = document.querySelectorAll(".outline-content");
+        var nodeArray = autoSaveContent(content);
+        console.log(nodeArray)
+        // code you would like to run 1000ms after the keyup event has stopped firing
+        // further keyup events reset the timer, as expected
+    }, 3000))
+
+    function autoSaveContent(content) {
+        var nodeArray = [];
+        var count = 0;
+        for (var i = 0; i < content.length; i++) {
+            if (content[i].classList.contains("outline-content")) {
+                nodeArray = autoSaveContent(content[i].children);
+            } else if (content[i].classList.contains("node-children")) {
+                nodeArray[count - 1]["children"] = autoSaveContent(content[i].children);
+            } else if (content[i].classList.contains("node-self")) {
+                nodeArray[count] = {
+                    "link": content[i].querySelector(".node-link").getAttribute("href"),
+                    "line": content[i].querySelector(".node-line").innerHTML,
+                };
+                count++;
+            }
+        }
+        return nodeArray;
+    };
 
 });

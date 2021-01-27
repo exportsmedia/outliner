@@ -84,25 +84,7 @@ if(!empty($parsed[0])) {
         <div class="page-content">
             <div class="header" contenteditable="true"><?php echo $currentItem['title']; ?></div>
             <div class="outline-content">
-                <?php 
-
-                displayArrayRecursively($parsed);
-                
-                ob_start();
-                $html = displayArrayRecursively($parsed);
-                $output = ob_get_clean();
-
-                $dom = new DOMDocument;
-                $dom->loadHTML($output);
-
-                $xpath = new DOMXPath($dom);
-                $nodes = $xpath->query('//div');
-
-                $tree = [];
-                $result = buildArrayTree( $tree, $nodes, 0, 0 );
-                echo "<pre>", print_r($result,1), "</pre>";
-                
-                ?>
+                <?php displayArrayRecursively($parsed); ?>
             </div>
         </div>
     </div>
@@ -115,27 +97,6 @@ if(!empty($parsed[0])) {
 
 
 <?php
-
-
-
-function buildArrayTree( $tree, $nodes, $key = 0, $pKey ) {
-    foreach ($nodes as $arrayKey => $node) {
-        $parentKey = $key;
-        if(stripos( $node->getAttribute('class'), "node-children") !== false && is_array($node)) {
-            buildArrayTree( $tree, $node, $arrayKey, $arrayKey );
-        }
-        if(stripos( $node->getAttribute('class'), "node-line") !== false) {
-            echo $pKey . "<br>";
-            $tree[$arrayKey][] = $node->nodeValue;
-            //$tree[$key][$count] = $node->nodeValue;
-            //echo $node->nodeValue . "<br>";
-        }
-    }
-    return $tree;
-}
-
-
-
 
 
 function check_active_link( int $item, int $outlineItem ) {
